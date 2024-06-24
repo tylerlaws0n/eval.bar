@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/chessanalysiswebapp.iml" filepath="$PROJECT_DIR$/.idea/chessanalysiswebapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/eval.bar.iml" filepath="$PROJECT_DIR$/.idea/eval.bar.iml" />
     </modules>
   </component>
 </project>
