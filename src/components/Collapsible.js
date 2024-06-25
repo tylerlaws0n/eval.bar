@@ -13,7 +13,7 @@ export default function Collapsible(props) {
                 }
             }
             } className="flex items-center justify-between px-4 py-1 gap-4 transition duration-100">
-                <span className="flex text-slate-300 font-bold">
+                <span className="flex text-slate-300">
                     {props.label}
                 </span>
                 <span className="flex flex-1 text-slate-50">
