@@ -146,7 +146,7 @@ export default function App() {
                     <rect className="w-full" height={30}/>
                 </svg>
             </div>
-            <div className="flex p-4 gap-8">
+            <div className="flex p-4 gap-4 flex-wrap">
                 <div className="flex-1 flex-col text-slate-50">
                     <div className="flex gap-1 mb-2 border-b border-slate-600">
                         <button onClick={() => setCurrTab(0)}
@@ -241,7 +241,7 @@ export default function App() {
                         </button>
                     </div>
                 </div>
-                <div className="flex-1 border-slate-500 border rounded p-4 py-2 flex-col gap-2">
+                <div className="flex border-slate-500 border rounded p-4 py-2 flex-col gap-2">
                     <Chessboard boardWidth={500} customLightSquareStyle={{backgroundColor: "#cbd5e1"}}
                                 customDarkSquareStyle={{backgroundColor: "#64748b"}}
                                 boardOrientation={orientedWhite ? "white" : "black"}
