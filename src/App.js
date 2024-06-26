@@ -68,6 +68,7 @@ export default function App() {
 
     const [move, setMove] = React.useState(null);
     const [eval_, setEval_] = React.useState(0.0);
+    const [evalOn, setEvalOn] = React.useState(true);
     const [depth, setDepth] = React.useState(0);
     const [orientedWhite, setOrientedWhite] = React.useState(true);
     const [currTab, setCurrTab] = React.useState(0); // can be 0, 1, or 2
@@ -78,7 +79,30 @@ export default function App() {
     const [libraryGames, setLibraryGames] = React.useState([
         {name: "Untitled game", date: "12/29/2022"},
         {name: "Positional London", date: "12/26/2022"},
-        {name: "Final exam", date:"12/24/2022"}
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
+        {name: "Final exam", date:"12/24/2022"},
+        {name: "Untitled game", date: "12/29/2022"},
+        {name: "Positional London", date: "12/26/2022"},
     ]);
     const [chesscomGames, setChesscomGames] = React.useState([
         {name: "Untitled game", date: "12/29/2022"},
@@ -87,7 +111,10 @@ export default function App() {
     ]);
     const [lichessGames, setLichessGames] = React.useState([]);
 
+    let promotionPiece = null
+
     function makeMove(move_) {
+        console.log(move_)
         const result = game.move(move_, move);
         if (result !== null) {
             setMove(result);
@@ -97,13 +124,23 @@ export default function App() {
         return result;
     }
 
-    function onPieceDrop(src, tgt) {
+    function onPromotionPieceSelect(piece, src, tgt) {
+        promotionPiece = piece
+        console.log(promotionPiece)
+        console.log("peace: ", piece)
+        return true
+    }
+
+    function onPieceDrop(src, tgt, piece) {
         // see if the move is legal
+        console.log("onPieceDrop")
         const result = makeMove({
             from: src,
             to: tgt,
-            promotion: "q" // always promote to a queen for example simplicity
+            piece: piece,
+            promotion: promotionPiece === null ? null : promotionPiece.charAt(1).toLowerCase()
         });
+        promotionPiece = null
         if (result !== null) {
             // stockfish.postMessage('position fen ' + result.fen);
             // stockfish.postMessage('go depth 20');
@@ -131,8 +168,12 @@ export default function App() {
         }
     }
 
+    function toggleEval() {
+        setEvalOn(!evalOn)
+    }
+
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col max-h-screen overflow-hidden">
             <nav className="flex p-2 text-sm text-slate-50">
                 <span className="flex flex-1">eval.bar</span>
                 <span className="flex flex-1"></span>
@@ -146,9 +187,9 @@ export default function App() {
                     <rect className="w-full" height={30}/>
                 </svg>
             </div>
-            <div className="flex p-4 gap-4 flex-wrap">
+            <div className="flex p-4 gap-4 flex-wrap justify-center">
                 <div className="flex-1 flex-col text-slate-50">
-                    <div className="flex gap-1 mb-2 border-b border-slate-600">
+                    <div className="flex w-full gap-1 mb-2 border-b border-slate-600">
                         <button onClick={() => setCurrTab(0)}
                                 className={"flex-1 flex flex-nowrap items-center justify-center space-x-1 border-t border-x border-transparent hover:border-slate-600 rounded-t p-2 transition duration-100" + (currTab === 0 ? " bg-slate-600" : "")}>
                             <div className="flex items-center justify-center w-6 h-6 mr-0.5">
@@ -169,7 +210,7 @@ export default function App() {
                                 {/*          d="M145 366c108.1 0 111-20.2 111-21.5 0-27.4-9.9-54.9-31-70.9-43.8-33.5-49.3-63.4-50.1-82.2 0-5 0-9.2-.1-12.5h34c4-7.4 6-14.2 6-22.7l-38.5-25.4c13.4-9.7 22.1-25.5 22.1-43.3 0-29.6-23.9-53.5-53.3-53.5S91.7 57.9 91.7 87.5c0 17.8 8.7 33.6 22.1 43.3l-38.5 25.4c0 8.5 2 15.3 6 22.7h34c-.1 3.3-.1 7.5-.1 12.5-.8 18.8-6.3 48.7-50.1 82.2-21 15.9-31 43.5-31 70.9C34 345.8 36.9 366 145 366z"/>*/}
                                 {/*</svg>*/}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 290 400"
-                                     xmlSpace="preserve" className="m-1">
+                                     xmlSpace="preserve" className="mx-0.5 scale-75">
                                     <path className="fill-slate-50"
                                           d="M145 400c151.9 0 145-46.5 145-55.9 0-35.8-13.4-74.5-44.4-98.1-16.1-12.3-25.1-23-30.2-32.6 10.6 0 12.9-1.8 16.8-7.3 13.1-18.8 18.9-38.2 16-61.2-.8-6.2-3.6-10.1-8.7-13.4l-13.9-9.1c4.6-10.7 7.1-22.3 7.1-34.5C232.6 39.2 193.3 0 145 0S57.4 39.2 57.4 87.8c0 12.1 2.5 23.8 7.1 34.5l-13.9 9.1c-5.1 3.4-8 7.3-8.7 13.4-3 23 2.9 42.4 16 61.2 3.8 5.5 6.1 7.3 16.8 7.3-5.1 9.5-14 20.2-30.2 32.6C13.5 269.5 0 308.1 0 344c0 9.5-6.9 56 145 56z"/>
                                     <path className={currTab === 1 ? "fill-slate-600" : "fill-slate-700"}
@@ -204,72 +245,87 @@ export default function App() {
                             <span className="flex">PGN</span>
                         </button>
                     </div>
-                    <div className={"flex flex-1 gap-4" + (currTab === 0 ? " flex" : " hidden")}>
-                        <GameList games={libraryGames}/>
-                    </div>
-                    <div className={"flex-col gap-4" + (currTab === 1 ? " flex" : " hidden")}>
-                        <div className="flex flex-1 flex-col gap-2">
-                            <label className="flex flex-col gap-2 text-slate-300 font-bold">
-                                Import games from Chess.com
-                                <input type="text" placeholder="Enter a chess.com username"
-                                       className="p-1 bg-slate-500 rounded font-normal"/>
-                            </label>
-                            <div className="flex flex-col flex-1 gap-2">
-                                <button
-                                    className="flex justify-center bg-green-600 text-slate-50 p-2 rounded hover:bg-green-700 transition duration-100 disabled:opacity-50 disabled:hover:bg-green-700">Fetch
-                                    1 month of games
-                                </button>
+                    <div className="flex flex-grow flex-col overflow-y-scroll">
+                        <div className={"flex flex-1 gap-4" + (currTab === 0 ? " flex" : " hidden")}>
+                            <GameList games={libraryGames}/>
+                        </div>
+                        <div className={"flex-col gap-4" + (currTab === 1 ? " flex" : " hidden")}>
+                            <div className="flex flex-1 flex-col gap-2">
+                                <label className="flex flex-col gap-2 text-slate-300 font-bold">
+                                    Import games from Chess.com
+                                    <input type="text" placeholder="Enter a chess.com username"
+                                           className="p-1 bg-slate-500 rounded font-normal"/>
+                                </label>
+                                <div className="flex flex-col flex-1 gap-2">
+                                    <button
+                                        className="flex justify-center bg-green-600 text-slate-50 p-2 rounded hover:bg-green-700 transition duration-100 disabled:opacity-50 disabled:hover:bg-green-700">Fetch
+                                        1 month of games
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex flex-col">
+                                <GameList games={chesscomGames}/>
                             </div>
                         </div>
-                        <div className="flex flex-col">
-                            <GameList games={chesscomGames}/>
+                        <div
+                            className={"flex-col gap-4 rounded overflow-hidden" + (currTab === 2 ? " flex" : " hidden")}>
+                            <span className="flex justify-center">Coming soon!</span>
+
+                        </div>
+                        <div
+                            className={"flex-col gap-4 rounded overflow-hidden" + (currTab === 3 ? " flex" : " hidden")}>
+                            <label className="flex flex-col gap-2 text-slate-300 font-bold">
+                                Import a game using PGN (Portable Game Notation)
+                                <textarea placeholder="1.e4 e5 2.Nf3 Nf6..."
+                                          className="p-1 bg-slate-500 rounded font-normal text-slate-50"/>
+                            </label>
+                            <button
+                                className="flex flex-1 bg-green-600 text-slate-50 rounded p-2 justify-center hover:bg-green-700 transition duration-100 disabled:opacity-50 disabled:hover:bg-green-600"
+                                type="submit">Import
+                            </button>
                         </div>
                     </div>
-                    <div className={"flex-col gap-4 rounded overflow-hidden" + (currTab === 2 ? " flex" : " hidden")}>
-                        <span className="flex justify-center">Coming soon!</span>
-
-                    </div>
-                    <div className={"flex-col gap-4 rounded overflow-hidden" + (currTab === 3 ? " flex" : " hidden")}>
-                        <label className="flex flex-col gap-2 text-slate-300 font-bold">
-                            Import a game using PGN (Portable Game Notation)
-                            <textarea placeholder="1.e4 e5 2.Nf3 Nf6..."
-                                      className="p-1 bg-slate-500 rounded font-normal text-slate-50"/>
-                        </label>
-                        <button
-                            className="flex flex-1 bg-green-600 text-slate-50 rounded p-2 justify-center hover:bg-green-700 transition duration-100 disabled:opacity-50 disabled:hover:bg-green-600"
-                            type="submit">Import
-                        </button>
-                    </div>
                 </div>
-                <div className="flex border-slate-500 border rounded p-4 py-2 flex-col gap-2">
+                <div className="flex border-slate-500 border rounded p-2 pt-0 flex-col gap-2 h-full">
                     <Chessboard boardWidth={500} customLightSquareStyle={{backgroundColor: "#cbd5e1"}}
                                 customDarkSquareStyle={{backgroundColor: "#64748b"}}
                                 boardOrientation={orientedWhite ? "white" : "black"}
-                                position={move === null ? FEN.start : move.fen} onPieceDrop={onPieceDrop}/>
+                                position={move === null ? FEN.start : move.fen} onPieceDrop={onPieceDrop}
+                                onPromotionPieceSelect={onPromotionPieceSelect}
+                                />
                     <div className="flex flex-1 gap-2 p-2">
                         <div className="flex flex-1 justify-start">
                             <button
                                 className="rounded-full fill-slate-400 hover:fill-slate-300 transition duration-100">
                                 <svg className="" xmlns="http://www.w3.org/2000/svg" height="48" width="48">
                                     <path
-                                        d="M8.35 40v-3h6.5l-.75-.6q-3.2-2.55-4.65-5.55-1.45-3-1.45-6.7 0-5.3 3.125-9.525Q14.25 10.4 19.35 8.8v3.1q-3.75 1.45-6.05 4.825T11 24.15q0 3.15 1.175 5.475 1.175 2.325 3.175 4.025l1.5 1.05v-6.2h3V40Zm20.35-.75V36.1q3.8-1.45 6.05-4.825T37 23.85q0-2.4-1.175-4.875T32.75 14.6l-1.45-1.3v6.2h-3V8h11.5v3h-6.55l.75.7q3 2.8 4.5 6t1.5 6.15q0 5.3-3.1 9.55-3.1 4.25-8.2 5.85Z"/></svg>
+                                        d="M8.35 40v-3h6.5l-.75-.6q-3.2-2.55-4.65-5.55-1.45-3-1.45-6.7 0-5.3 3.125-9.525Q14.25 10.4 19.35 8.8v3.1q-3.75 1.45-6.05 4.825T11 24.15q0 3.15 1.175 5.475 1.175 2.325 3.175 4.025l1.5 1.05v-6.2h3V40Zm20.35-.75V36.1q3.8-1.45 6.05-4.825T37 23.85q0-2.4-1.175-4.875T32.75 14.6l-1.45-1.3v6.2h-3V8h11.5v3h-6.55l.75.7q3 2.8 4.5 6t1.5 6.15q0 5.3-3.1 9.55-3.1 4.25-8.2 5.85Z"/>
+                                </svg>
                             </button>
                         </div>
                         <button className="rotate-180 rounded-full hover:bg-slate-600 transition duration-100">
-                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M34 36V12h3v24Zm-23 0V12l17.3 12Zm3-12Zm0 6.25L23.05 24 14 17.75Z"/></svg>
+                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                                <path d="M34 36V12h3v24Zm-23 0V12l17.3 12Zm3-12Zm0 6.25L23.05 24 14 17.75Z"/>
+                            </svg>
                         </button>
-                        <button onClick={previousMove} className="rotate-180 rounded-full hover:bg-slate-600 transition duration-100">
-                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z"/></svg>
+                        <button onClick={previousMove}
+                                className="rotate-180 rounded-full hover:bg-slate-600 transition duration-100">
+                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                                <path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z"/>
+                            </svg>
                         </button>
                         <button onClick={nextMove} className="rounded-full hover:bg-slate-600 transition duration-100">
-                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z"/></svg>
+                            <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                                <path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z"/></svg>
                         </button>
                         <button className="rounded-full hover:bg-slate-600 transition duration-100">
                             <svg className="fill-slate-50" xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M34 36V12h3v24Zm-23 0V12l17.3 12Zm3-12Zm0 6.25L23.05 24 14 17.75Z"/></svg>
                         </button>
                         <div className="flex flex-1 justify-end">
                             <button onClick={() => setOrientedWhite(!orientedWhite)} className="rounded-full fill-slate-400 hover:fill-slate-300 transition duration-100">
-                                <svg className="" xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M8.35 40v-3h6.5l-.75-.6q-3.2-2.55-4.65-5.55-1.45-3-1.45-6.7 0-5.3 3.125-9.525Q14.25 10.4 19.35 8.8v3.1q-3.75 1.45-6.05 4.825T11 24.15q0 3.15 1.175 5.475 1.175 2.325 3.175 4.025l1.5 1.05v-6.2h3V40Zm20.35-.75V36.1q3.8-1.45 6.05-4.825T37 23.85q0-2.4-1.175-4.875T32.75 14.6l-1.45-1.3v6.2h-3V8h11.5v3h-6.55l.75.7q3 2.8 4.5 6t1.5 6.15q0 5.3-3.1 9.55-3.1 4.25-8.2 5.85Z"/></svg>
+                                <svg className="" xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                                    <path d="M8.35 40v-3h6.5l-.75-.6q-3.2-2.55-4.65-5.55-1.45-3-1.45-6.7 0-5.3 3.125-9.525Q14.25 10.4 19.35 8.8v3.1q-3.75 1.45-6.05 4.825T11 24.15q0 3.15 1.175 5.475 1.175 2.325 3.175 4.025l1.5 1.05v-6.2h3V40Zm20.35-.75V36.1q3.8-1.45 6.05-4.825T37 23.85q0-2.4-1.175-4.875T32.75 14.6l-1.45-1.3v6.2h-3V8h11.5v3h-6.55l.75.7q3 2.8 4.5 6t1.5 6.15q0 5.3-3.1 9.55-3.1 4.25-8.2 5.85Z"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -278,17 +334,32 @@ export default function App() {
                     <div className="flex flex-1 flex-col gap-2 text-slate-300">
                         <div className="flex flex-col gap-2">
                             <div className="flex gap-2 bg-slate-600 rounded">
-                            <span className="flex bg-slate-900 text-slate-50 rounded-l p-2 text-xl font-bold">
-                                {eval_.toPrecision(3)}
-                            </span>
+                                <div className={"flex flex-nowrap justify-center rounded-l p-2 text-xl font-mono font-bold" + (eval_ >= 0 ? " bg-slate-50 text-slate-900" : " bg-slate-900 text-slate-50")}>
+                                    {(eval_ > 0 ? "+" : "") + eval_.toFixed(2)}
+                                </div>
                                 <div className="flex flex-1 p-1">
                                     <div className="flex flex-1 flex-col justify-center">
                                         <span className="text-xs font-bold text-slate-400">Stockfish 15</span>
                                         <span className="text-sm text-slate-300">Depth {depth}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                        <button className="flex">
-                                            pause
+                                        <button className="flex" onClick={toggleEval}>
+                                            <div className="px-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height="36" width="36">
+                                                    <path
+                                                        className={"fill-slate-300 transition duration-200" + (evalOn === true ? "" : " opacity-0")}
+                                                        d="M280-260q-91.67 0-155.83-64.14Q60-388.28 60-479.91q0-91.63 64.17-155.86Q188.33-700 280-700h400q91.67 0 155.83 64.14Q900-571.72 900-480.09q0 91.63-64.17 155.86Q771.67-260 680-260H280Zm399.95-110q45.82 0 77.93-32.07Q790-434.14 790-479.95q0-45.82-32.07-77.93Q725.86-590 680.05-590q-45.82 0-77.93 32.07Q570-525.86 570-480.05q0 45.82 32.07 77.93Q634.14-370 679.95-370Z"/>
+                                                    <path
+                                                        className={"fill-slate-400 transition duration-200" + (evalOn === false ? "" : " opacity-0")}
+                                                        d="M280-260q-91.67 0-155.83-64.14Q60-388.28 60-479.91q0-91.63 64.17-155.86Q188.33-700 280-700h400q91.67 0 155.83 64.14Q900-571.72 900-480.09q0 91.63-64.17 155.86Q771.67-260 680-260H280Zm0-60h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm-.05-50q45.82 0 77.93-32.07Q390-434.14 390-479.95q0-45.82-32.07-77.93Q325.86-590 280.05-590q-45.82 0-77.93 32.07Q170-525.86 170-480.05q0 45.82 32.07 77.93Q234.14-370 279.95-370ZM480-480Z"/>
+                                                </svg>
+                                                {/*<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"*/}
+                                                {/*     height="36" width="36">*/}
+                                                {/*    <path className={"fill-slate-300" + (evalOn === false ? "" : " invisible")}*/}
+                                                {/*          d="M280-260q-91.67 0-155.83-64.14Q60-388.28 60-479.91q0-91.63 64.17-155.86Q188.33-700 280-700h400q91.67 0 155.83 64.14Q900-571.72 900-480.09q0 91.63-64.17 155.86Q771.67-260 680-260H280Zm0-60h400q66 0 113-47t47-113q0-66-47-113t-113-47H280q-66 0-113 47t-47 113q0 66 47 113t113 47Zm-.05-50q45.82 0 77.93-32.07Q390-434.14 390-479.95q0-45.82-32.07-77.93Q325.86-590 280.05-590q-45.82 0-77.93 32.07Q170-525.86 170-480.05q0 45.82 32.07 77.93Q234.14-370 279.95-370ZM480-480Z"/>*/}
+                                                {/*</svg>*/}
+                                            </div>
+
                                         </button>
                                     </div>
                                 </div>
